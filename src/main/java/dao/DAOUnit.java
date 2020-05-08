@@ -3,14 +3,13 @@ package dao;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
 import java.util.Objects;
 
 public abstract class DAOUnit<T> implements DAOInterface<T> {
 
     private static final EntityManager em = Persistence
             .createEntityManagerFactory("DBS").createEntityManager();
-    private static final EntityTransaction TRANSACTION = em.getTransaction();
+    private static final EntityTransaction et = em.getTransaction();
 
     private final Class<T> type;
 
@@ -20,34 +19,32 @@ public abstract class DAOUnit<T> implements DAOInterface<T> {
 
     public void persist(T entity) {
         Objects.requireNonNull(entity);
-        try {
-           em.persist(entity);
-        } catch (RuntimeException e) {
-            throw new PersistenceException(e);
-        }
+        et.begin();
+        em.persist(entity);
+        et.commit();
     }
 
     public T find(Integer id) {
         Objects.requireNonNull(id);
-        return em.find(type, id);
+        et.begin();
+        T entity = em.getReference(type, id);
+        et.commit();
+        return entity;
     }
 
     public void update(T entity) {
         Objects.requireNonNull(entity);
-        try {
-            em.merge(entity);
-        } catch (RuntimeException e) {
-            throw new PersistenceException();
-        }
+        et.begin();
+        em.merge(entity);
+        et.commit();
     }
 
-    // Probably should be rewritten
-    public void remove(T entity) {
-        Objects.requireNonNull(entity);
-        try {
-            em.remove(entity);
-        } catch (RuntimeException e) {
-            throw new PersistenceException();
-        }
+
+    public void remove(Integer id) {
+        Objects.requireNonNull(id);
+        et.begin();
+        T entity = em.getReference(type, id);
+        em.remove(entity);
+        et.commit();
     }
 }

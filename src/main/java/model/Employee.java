@@ -7,13 +7,13 @@ import javax.persistence.Id;
 public class Employee {
 
     @Id
-    private Integer id;
+    private Integer id_emp;
 
     public Integer getId() {
-        return id;
+        return id_emp;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.id_emp = id;
     }
 }

@@ -20,8 +20,8 @@ public interface DAOInterface<T> {
     void update(T entity);
 
     /**
-     * @param entity
+     * @param id
      * @return
      */
-    void remove(T entity);
+    void remove(Integer id);
 }
