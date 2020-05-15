@@ -3,6 +3,8 @@ package dao;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class DAOUnit<T> implements DAOInterface<T> {
@@ -46,5 +48,12 @@ public abstract class DAOUnit<T> implements DAOInterface<T> {
         T entity = em.getReference(type, id);
         em.remove(entity);
         et.commit();
+    }
+
+    public List<T> findAll() {
+        et.begin();
+        Query query = em.createQuery("SELECT e FROM " + type.getSimpleName() + " e", type);
+        et.commit();
+        return query.getResultList();
     }
 }
