@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AppointmentService {
 
-    private AppointmentDAO dao;
+    private final AppointmentDAO dao;
 
     public AppointmentService() {
         dao = new AppointmentDAO();
