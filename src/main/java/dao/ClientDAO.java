@@ -3,7 +3,7 @@ package dao;
 import model.Client;
 
 public class ClientDAO extends DAOUnit<Client> {
-    protected ClientDAO() {
+    public ClientDAO() {
         super(Client.class);
     }
 }

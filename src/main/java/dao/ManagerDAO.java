@@ -3,7 +3,7 @@ package dao;
 import model.Manager;
 
 public class ManagerDAO extends DAOUnit<Manager> {
-    protected ManagerDAO() {
+    public ManagerDAO() {
         super(Manager.class);
     }
 }
