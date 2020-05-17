@@ -12,15 +12,20 @@ public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setSize(800, 600);
+
         AppointmentService service = new AppointmentService();
+        DetailService detailService = new DetailService();
 
         JTabbedPane jTabbedPane = new JTabbedPane();
 
         String[][] data = service.getAppointments();
-        AppointmentsPanel panel = new AppointmentsPanel(data);
+        String[][] detailData = detailService.getDetails();
 
+        AppointmentsPanel panel = new AppointmentsPanel(data);
+        EmployeesPanel employeesPanel = new EmployeesPanel(detailData);
 
         jTabbedPane.addTab("Appointments", panel);
+        jTabbedPane.addTab("Employees", employeesPanel);
 
         frame.add(jTabbedPane);
         frame.setResizable(false);

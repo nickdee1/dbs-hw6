@@ -3,12 +3,12 @@ package presentation;
 import javax.swing.*;
 import java.awt.*;
 
-public class AppointmentsPanel extends JPanel {
+public class EmployeesPanel extends JPanel {
 
-    private static final String[] COLUMNS = {"Services", "Client Email", "Client Name", "Barber Id", "Day", "Time", "Price"};
+    private static final String[] COLUMNS = {"Id", "First Name", "Second Name", "Is Manager", "Birth Day", "Salary"};
     private String[][] data;
 
-    public AppointmentsPanel(String[][] data) {
+    public EmployeesPanel(String[][] data) {
         super(null);
         this.data = data;
 
@@ -18,9 +18,9 @@ public class AppointmentsPanel extends JPanel {
         scrollPane.setSize(780, 400);
 
         JPanel buttonPanel = new JPanel();
-        JButton button = new JButton("Add Appointment");
-        JButton button1 = new JButton("Edit Appointment");
-        JButton button2 = new JButton("Delete Appointment");
+        JButton button = new JButton("Add Employee");
+        JButton button1 = new JButton("Edit Employee");
+        JButton button2 = new JButton("Delete Employee");
         buttonPanel.add(button);
         buttonPanel.add(button1);
         buttonPanel.add(button2);
