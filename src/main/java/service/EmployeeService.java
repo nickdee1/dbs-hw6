@@ -79,5 +79,11 @@ public class EmployeeService {
 //        d.setManager(true);
 //
 //        detailDAO.persist(d);
+
+        String tr = "aBa";
+        if (tr.toLowerCase().equals("true") || tr.toLowerCase().equals("false")) {
+            System.out.println("kek");
+        }
+
     }
 }
