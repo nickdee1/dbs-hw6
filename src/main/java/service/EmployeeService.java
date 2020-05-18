@@ -6,6 +6,7 @@ import model.*;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -68,15 +69,15 @@ public class EmployeeService {
 //        List<Employee> list = dao.findAll();
 
 
-        DetailDAO detailDAO = new DetailDAO();
-        Detail d = new Detail();
-        d.setEmployee_id(21);
-        d.setFirst_name("Karl");
-        d.setSecond_name("Velky");
-        d.setBirthday(new Date(1589552991));
-        d.setSalary(40000.0);
-        d.setManager(true);
-
-        detailDAO.persist(d);
+//        DetailDAO detailDAO = new DetailDAO();
+//        Detail d = new Detail();
+//        d.setEmployee_id(21);
+//        d.setFirst_name("Karl");
+//        d.setSecond_name("Velky");
+//        d.setBirthday(new LocalDate()Date(1589552991));
+//        d.setSalary(40000.0);
+//        d.setManager(true);
+//
+//        detailDAO.persist(d);
     }
 }
