@@ -1,48 +1,56 @@
 package model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "Appointment")
 public class Appointment implements Serializable {
 
     @Id
+    @Column(name = "id")
+    private Integer id;
+
+    @Id
+    @Column(name = "service_type")
     private String service_type;
 
     @Id
+    @Column(name = "client_id")
     private Integer client_id;
 
     @Id
+    @Column(name = "client_email")
     private String client_email;
 
     @Id
+    @Column(name = "barber_id")
     private Integer barber_id;
 
     @Id
-    private Date day;
+    @Column(name = "day")
+    private LocalDate day;
 
     @Id
-    private Time time;
+    @Column(name = "time")
+    private LocalTime time;
 
     private Double price;
 
     private String client_name;
 
-    @ManyToMany(mappedBy = "appointments")
-    private List<Barber> barbers;
-
-    public Appointment(List<Barber> barbers) {
-        this.barbers = barbers;
+    public Integer getId() {
+        return id;
     }
 
-    public Appointment() {
-        this.barbers = new ArrayList<>();
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getService_type() {
@@ -77,19 +85,19 @@ public class Appointment implements Serializable {
         this.barber_id = barber_id;
     }
 
-    public Date getDay() {
+    public LocalDate getDay() {
         return day;
     }
 
-    public void setDay(Date day) {
+    public void setDay(LocalDate day) {
         this.day = day;
     }
 
-    public Time getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 
@@ -109,7 +117,4 @@ public class Appointment implements Serializable {
         this.client_name = client_name;
     }
 
-    public void addBarber(Barber barber) {
-        this.barbers.add(barber);
-    }
 }
