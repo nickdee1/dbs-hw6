@@ -21,17 +21,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class EmployeesPanel extends JPanel implements ActionListener {
+public class EmployeesPanel extends JPanel {
 
     private static final String[] COLUMNS = {"Id", "First Name", "Second Name", "Is Manager", "Birth Day", "Salary"};
-    private String[][] data;
-    private DetailDAO dao;
-    private JTable dataTable;
-    private DefaultTableModel model;
+    private final DetailDAO dao;
+    private final JTable dataTable;
+    private final DefaultTableModel model;
 
     public EmployeesPanel(final String[][] data) {
         super(null);
-        this.data = data;
 
         dao = new DetailDAO();
 
@@ -42,16 +40,18 @@ public class EmployeesPanel extends JPanel implements ActionListener {
 
         scrollPane.setSize(780, 400);
 
+        Handler h = new Handler(this);
+
         JPanel buttonPanel = new JPanel();
         JButton button = new JButton("Add Employee");
         JButton button1 = new JButton("Edit Employee");
         JButton button2 = new JButton("Delete Employee");
 
-        button.addActionListener(this);
+        button.addActionListener(h);
         button.setActionCommand("Add");
-        button1.addActionListener(this);
+        button1.addActionListener(h);
         button1.setActionCommand("Edit");
-        button2.addActionListener(this);
+        button2.addActionListener(h);
         button2.setActionCommand("Delete");
 
         buttonPanel.add(button);
@@ -63,94 +63,8 @@ public class EmployeesPanel extends JPanel implements ActionListener {
 
         add(scrollPane);
         add(buttonPanel);
-
-        dataTable.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-
-            }
-        });
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
-        switch (action) {
-            case "Delete":
-                int selectedRow = dataTable.getSelectedRow();
-                Integer id = Integer.parseInt((String) dataTable.getValueAt(selectedRow, 0));
-                model.removeRow(selectedRow);
-                dao.remove(id);
-                break;
-            case "Add":
-                JTextField tx1 = new JTextField();
-                JTextField tx2 = new JTextField();
-                JTextField tx3 = new JTextField();
-                JTextField tx4 = new JTextField();
-                JTextField tx5 = new JTextField();
-                JTextField tx6 = new JTextField();
-                Object[] a = {"Id", tx1, "First Name", tx2, "Second Name", tx3, "Is Manager (true/false)", tx4, "Birth Day (YYYY-MM-DD)", tx5, "Salary", tx6};
-                int opt = JOptionPane.showConfirmDialog(this, a);
-
-                if (opt == JOptionPane.OK_OPTION) {
-                    String[] data = new String[]{
-                            tx1.getText(),
-                            tx2.getText(),
-                            tx3.getText(),
-                            tx4.getText(),
-                            tx5.getText(),
-                            tx6.getText()};
-                    Object[] formattedData = checkData(data);
-                    if (formattedData != null) {
-                        parseEmployeeDetail(formattedData);
-                        model.addRow(data);
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                break;
-            case "Edit":
-                int row = dataTable.getSelectedRow();
-                JTextField firstName = new JTextField((String) model.getValueAt(row, 1));
-                JTextField secondName = new JTextField((String) model.getValueAt(row, 2));
-                JTextField isManager = new JTextField((String) model.getValueAt(row, 3));
-                JTextField birthDay = new JTextField((String) model.getValueAt(row, 4));
-                JTextField salary = new JTextField((String) model.getValueAt(row, 5));
-                Object[] popupData = {"First Name", firstName, "Second Name", secondName, "Is Manager(true/false)", isManager, "Birth Day (YYYY-MM-DD)", birthDay, "Salary", salary};
-                int option = JOptionPane.showConfirmDialog(this, popupData);
-
-                if (option == JOptionPane.OK_OPTION) {
-                    String[] data = new String[]{
-                            (String) model.getValueAt(row, 0),
-                            firstName.getText(),
-                            secondName.getText(),
-                            isManager.getText(),
-                            birthDay.getText(),
-                            salary.getText()};
-                    Object[] formattedData = checkData(data);
-                    if (formattedData != null) {
-                        Integer idEmp = (Integer) formattedData[0];
-                        Detail det = dao.find(idEmp);
-                        det.setFirst_name((String) formattedData[1]);
-                        det.setSecond_name((String) formattedData[2]);
-                        det.setManager((Boolean) formattedData[3]);
-                        det.setBirthday((LocalDate) formattedData[4]);
-                        det.setSalary((Double) formattedData[5]);
-                        dao.update(det);
-
-                        for (int i = 1; i < 6; i++) {
-                            model.setValueAt(data[i], row, i);
-                        }
-
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-
-
-                break;
-        }
-    }
 
     private void parseEmployeeDetail(Object[] data) {
         Detail detail = new Detail();
@@ -220,5 +134,92 @@ public class EmployeesPanel extends JPanel implements ActionListener {
         output[5] = salary;
 
         return output;
+    }
+
+    private class Handler implements ActionListener {
+
+        EmployeesPanel panel;
+
+        public Handler(EmployeesPanel panel) {
+            this.panel = panel;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String action = e.getActionCommand();
+            switch (action) {
+                case "Delete":
+                    int selectedRow = dataTable.getSelectedRow();
+                    Integer id = Integer.parseInt((String) dataTable.getValueAt(selectedRow, 0));
+                    model.removeRow(selectedRow);
+                    dao.remove(id);
+                    break;
+                case "Add":
+                    JTextField tx1 = new JTextField();
+                    JTextField tx2 = new JTextField();
+                    JTextField tx3 = new JTextField();
+                    JTextField tx4 = new JTextField();
+                    JTextField tx5 = new JTextField();
+                    JTextField tx6 = new JTextField();
+                    Object[] a = {"Id", tx1, "First Name", tx2, "Second Name", tx3, "Is Manager (true/false)", tx4, "Birth Day (YYYY-MM-DD)", tx5, "Salary", tx6};
+                    int opt = JOptionPane.showConfirmDialog(panel, a);
+
+                    if (opt == JOptionPane.OK_OPTION) {
+                        String[] data = new String[]{
+                                tx1.getText(),
+                                tx2.getText(),
+                                tx3.getText(),
+                                tx4.getText(),
+                                tx5.getText(),
+                                tx6.getText()};
+                        Object[] formattedData = checkData(data);
+                        if (formattedData != null) {
+                            parseEmployeeDetail(formattedData);
+                            model.addRow(data);
+                        } else {
+                            JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    break;
+                case "Edit":
+                    int row = dataTable.getSelectedRow();
+                    JTextField firstName = new JTextField((String) model.getValueAt(row, 1));
+                    JTextField secondName = new JTextField((String) model.getValueAt(row, 2));
+                    JTextField isManager = new JTextField((String) model.getValueAt(row, 3));
+                    JTextField birthDay = new JTextField((String) model.getValueAt(row, 4));
+                    JTextField salary = new JTextField((String) model.getValueAt(row, 5));
+                    Object[] popupData = {"First Name", firstName, "Second Name", secondName, "Is Manager(true/false)", isManager, "Birth Day (YYYY-MM-DD)", birthDay, "Salary", salary};
+                    int option = JOptionPane.showConfirmDialog(panel, popupData);
+
+                    if (option == JOptionPane.OK_OPTION) {
+                        String[] data = new String[]{
+                                (String) model.getValueAt(row, 0),
+                                firstName.getText(),
+                                secondName.getText(),
+                                isManager.getText(),
+                                birthDay.getText(),
+                                salary.getText()};
+                        Object[] formattedData = checkData(data);
+                        if (formattedData != null) {
+                            Integer idEmp = (Integer) formattedData[0];
+                            Detail det = dao.find(idEmp);
+                            det.setFirst_name((String) formattedData[1]);
+                            det.setSecond_name((String) formattedData[2]);
+                            det.setManager((Boolean) formattedData[3]);
+                            det.setBirthday((LocalDate) formattedData[4]);
+                            det.setSalary((Double) formattedData[5]);
+                            dao.update(det);
+
+                            for (int i = 1; i < 6; i++)
+                                model.setValueAt(data[i], row, i);
+
+
+                        } else {
+                            JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    break;
+            }
+        }
     }
 }
