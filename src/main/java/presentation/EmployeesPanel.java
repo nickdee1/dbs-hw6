@@ -1,7 +1,13 @@
 package presentation;
 
+import dao.BarberDAO;
 import dao.DetailDAO;
+import dao.EmployeeDAO;
+import dao.ManagerDAO;
+import model.Barber;
 import model.Detail;
+import model.Employee;
+import model.Manager;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -77,14 +83,13 @@ public class EmployeesPanel extends JPanel implements ActionListener {
                 dao.remove(id);
                 break;
             case "Add":
-
                 JTextField tx1 = new JTextField();
                 JTextField tx2 = new JTextField();
                 JTextField tx3 = new JTextField();
                 JTextField tx4 = new JTextField();
                 JTextField tx5 = new JTextField();
                 JTextField tx6 = new JTextField();
-                Object[] a = {"Id", tx1, "First Name", tx2, "Second Name", tx3, "Is Manager", tx4, "Birth Day", tx5, "Salary", tx6};
+                Object[] a = {"Id", tx1, "First Name", tx2, "Second Name", tx3, "Is Manager (true/false)", tx4, "Birth Day (YYYY-MM-DD)", tx5, "Salary", tx6};
                 int opt = JOptionPane.showConfirmDialog(this, a);
 
                 if (opt == JOptionPane.OK_OPTION) {
@@ -111,7 +116,7 @@ public class EmployeesPanel extends JPanel implements ActionListener {
                 JTextField isManager = new JTextField((String) model.getValueAt(row, 3));
                 JTextField birthDay = new JTextField((String) model.getValueAt(row, 4));
                 JTextField salary = new JTextField((String) model.getValueAt(row, 5));
-                Object[] popupData = {"First Name", firstName, "Second Name", secondName, "Is Manager", isManager, "Birth Day", birthDay, "Salary", salary};
+                Object[] popupData = {"First Name", firstName, "Second Name", secondName, "Is Manager(true/false)", isManager, "Birth Day (YYYY-MM-DD)", birthDay, "Salary", salary};
                 int option = JOptionPane.showConfirmDialog(this, popupData);
 
                 if (option == JOptionPane.OK_OPTION) {
@@ -149,12 +154,28 @@ public class EmployeesPanel extends JPanel implements ActionListener {
 
     private void parseEmployeeDetail(Object[] data) {
         Detail detail = new Detail();
+        Employee employee = new Employee();
+        EmployeeDAO employeeDAO = new EmployeeDAO();
+        employee.setId((Integer) data[0]);
         detail.setEmployee_id((Integer) data[0]);
         detail.setFirst_name((String) data[1]);
         detail.setSecond_name((String) data[2]);
         detail.setManager((Boolean) data[3]);
         detail.setBirthday((LocalDate) data[4]);
         detail.setSalary((Double) data[5]);
+        employeeDAO.persist(employee);
+        if (detail.isManager()) {
+            Manager manager = new Manager();
+            ManagerDAO managerDAO = new ManagerDAO();
+            manager.setManager_id(employee.getId());
+            managerDAO.persist(manager);
+        } else {
+            Barber barber = new Barber();
+            BarberDAO barberDAO = new BarberDAO();
+            barber.setBarber_id(employee.getId());
+            barberDAO.persist(barber);
+        }
+
         dao.persist(detail);
     }
 
