@@ -105,7 +105,44 @@ public class EmployeesPanel extends JPanel implements ActionListener {
                 }
                 break;
             case "Edit":
-                // TODO: - FINISH
+                int row = dataTable.getSelectedRow();
+                JTextField firstName = new JTextField((String) model.getValueAt(row, 1));
+                JTextField secondName = new JTextField((String) model.getValueAt(row, 2));
+                JTextField isManager = new JTextField((String) model.getValueAt(row, 3));
+                JTextField birthDay = new JTextField((String) model.getValueAt(row, 4));
+                JTextField salary = new JTextField((String) model.getValueAt(row, 5));
+                Object[] popupData = {"First Name", firstName, "Second Name", secondName, "Is Manager", isManager, "Birth Day", birthDay, "Salary", salary};
+                int option = JOptionPane.showConfirmDialog(this, popupData);
+
+                if (option == JOptionPane.OK_OPTION) {
+                    String[] data = new String[]{
+                            (String) model.getValueAt(row, 0),
+                            firstName.getText(),
+                            secondName.getText(),
+                            isManager.getText(),
+                            birthDay.getText(),
+                            salary.getText()};
+                    Object[] formattedData = checkData(data);
+                    if (formattedData != null) {
+                        Integer idEmp = (Integer) formattedData[0];
+                        Detail det = dao.find(idEmp);
+                        det.setFirst_name((String) formattedData[1]);
+                        det.setSecond_name((String) formattedData[2]);
+                        det.setManager((Boolean) formattedData[3]);
+                        det.setBirthday((LocalDate) formattedData[4]);
+                        det.setSalary((Double) formattedData[5]);
+                        dao.update(det);
+
+                        for (int i = 1; i < 6; i++) {
+                            model.setValueAt(data[i], row, i);
+                        }
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+
+
                 break;
         }
     }
