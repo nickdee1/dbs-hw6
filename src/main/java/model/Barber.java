@@ -1,34 +1,28 @@
 package model;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
+@Table(name = "Barber")
 public class Barber {
 
     @Id
     @Column(columnDefinition = "barber_id")
     private Integer barber_id;
 
-    @ManyToMany
-    @JoinTable(name = "Appointment", joinColumns = @JoinColumn(name = "barbers_id"),
-            inverseJoinColumns={@JoinColumn(name = "id"),
-                    @JoinColumn(name="service_type"),
-                    @JoinColumn(name = "client_id"),
-                    @JoinColumn(name = "client_email"),
-                    @JoinColumn(name = "barber_id"),
-                    @JoinColumn(name = "day"),
-                    @JoinColumn(name = "time")})
-    private List<Appointment> appointments;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinTable(name = "barb_app", joinColumns = @JoinColumn(name = "barber_id"),
+            inverseJoinColumns = {@JoinColumn(name = "appointment_id", referencedColumnName = "id")})
+    private List<Appointment> appointments = new ArrayList<>();
 
-    public Barber(List<Appointment> appointments) {
-        this.appointments = appointments;
-    }
-
-    public Barber() {
-        this.appointments = new ArrayList<>();
-    }
 
     public Integer getBarber_id() {
         return barber_id;
@@ -40,5 +34,13 @@ public class Barber {
 
     public void addAppointment(Appointment appointment) {
         this.appointments.add(appointment);
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }

@@ -110,12 +110,11 @@ public class EmployeesPanel extends JPanel {
         }
 
         if (data[3].toLowerCase().equals("true") || data[3].toLowerCase().equals("false"))
-            isManager = Boolean.getBoolean(data[3]);
+            isManager = Boolean.parseBoolean(data[3].toLowerCase());
         else
             return null;
 
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-DD");
             date = LocalDate.parse(data[4]);
         } catch (DateTimeException e) {
             return null;
@@ -152,7 +151,18 @@ public class EmployeesPanel extends JPanel {
                     int selectedRow = dataTable.getSelectedRow();
                     Integer id = Integer.parseInt((String) dataTable.getValueAt(selectedRow, 0));
                     model.removeRow(selectedRow);
-                    dao.remove(id);
+                    if (dao.find(id).isManager()) {
+                        dao.remove(id);
+                        ManagerDAO managerDAO = new ManagerDAO();
+                        managerDAO.remove(id);
+                    }
+                    else {
+                        dao.remove(id);
+                        BarberDAO d = new BarberDAO();
+                        d.remove(id);
+                    }
+                    EmployeeDAO em = new EmployeeDAO();
+                    em.remove(id);
                     break;
                 case "Add":
                     JTextField tx1 = new JTextField();
@@ -174,6 +184,13 @@ public class EmployeesPanel extends JPanel {
                                 tx6.getText()};
                         Object[] formattedData = checkData(data);
                         if (formattedData != null) {
+                            EmployeeDAO employeeDAO = new EmployeeDAO();
+                            Employee employee = employeeDAO.find((Integer) formattedData[0]);
+                            if (employee != null) {
+                                JOptionPane.showMessageDialog(panel, "Employee already exists!", "error", JOptionPane.ERROR_MESSAGE);
+                                break;
+                            }
+
                             parseEmployeeDetail(formattedData);
                             model.addRow(data);
                         } else {

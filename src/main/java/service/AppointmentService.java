@@ -20,6 +20,7 @@ public class AppointmentService {
 
         for (Appointment a : data) {
             String[] record = {
+                    a.getId().toString(),
                     a.getService_type(),
                     a.getClient_email(),
                     a.getClient_name(),

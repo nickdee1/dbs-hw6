@@ -9,11 +9,11 @@ import java.util.Objects;
 
 public abstract class DAOUnit<T> implements DAOInterface<T> {
 
-    private static final EntityManager em = Persistence
+    protected static final EntityManager em = Persistence
             .createEntityManagerFactory("DBS").createEntityManager();
-    private static final EntityTransaction et = em.getTransaction();
+    protected static final EntityTransaction et = em.getTransaction();
 
-    private final Class<T> type;
+    protected final Class<T> type;
 
     protected DAOUnit(Class<T> type) {
         this.type = type;

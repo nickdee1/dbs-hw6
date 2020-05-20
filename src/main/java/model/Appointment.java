@@ -2,12 +2,8 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "Appointment")
@@ -15,29 +11,28 @@ public class Appointment implements Serializable {
 
     @Id
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    @Id
     @Column(name = "service_type")
     private String service_type;
 
-    @Id
+
     @Column(name = "client_id")
     private Integer client_id;
 
-    @Id
+
     @Column(name = "client_email")
     private String client_email;
 
-    @Id
+
     @Column(name = "barber_id")
     private Integer barber_id;
 
-    @Id
+
     @Column(name = "day")
     private LocalDate day;
 
-    @Id
+
     @Column(name = "time")
     private LocalTime time;
 
@@ -45,13 +40,10 @@ public class Appointment implements Serializable {
 
     private String client_name;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getService_type() {
         return service_type;
@@ -59,6 +51,10 @@ public class Appointment implements Serializable {
 
     public void setService_type(String service_type) {
         this.service_type = service_type;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getClient_id() {
