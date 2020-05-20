@@ -5,6 +5,10 @@ import model.Appointment;
 
 import java.util.List;
 
+
+/**
+ * Service class for fetching Appointment info.
+ */
 public class AppointmentService {
 
     private final AppointmentDAO dao;
@@ -13,6 +17,10 @@ public class AppointmentService {
         dao = new AppointmentDAO();
     }
 
+    /**
+     * Fetch all data from DB.
+     * @return Double dimensional array with all records
+     */
     public String[][] getAppointments() {
         List<Appointment> data = dao.findAll();
         String[][] output = new String[data.size()][];

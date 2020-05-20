@@ -6,6 +6,9 @@ import model.Detail;
 
 import java.util.List;
 
+/**
+ * Service class for fetching Detail info.
+ */
 public class DetailService {
 
     private final DetailDAO dao;
@@ -14,6 +17,10 @@ public class DetailService {
         this.dao = new DetailDAO();
     }
 
+    /**
+     * Fetch all data from DB.
+     * @return Double dimensional array with all records
+     */
     public String[][] getDetails() {
         List<Detail> data = dao.findAll();
         String[][] output = new String[data.size()][];

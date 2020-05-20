@@ -1,27 +1,37 @@
 package dao;
 
+import java.util.List;
+
 public interface DAOInterface<T> {
 
     /**
-     * @param entity
+     * Persist data to DB.
+     * @param entity - entity to persist.
      */
     void persist(T entity);
 
-    /**
-     * @param id
-     * @return
+    /** Find in DB by ID.
+     * @param id - id of entity.
+     * @return output entity.
      */
     T find(Integer id);
 
     /**
-     * @param entity
-     * @return
+     * Update entity.
+     * @param entity - entity to update.
      */
     void update(T entity);
 
     /**
-     * @param id
-     * @return
+     * Remove entity.
+     * @param id ID of entity to remove.
      */
     void remove(Integer id);
+
+
+    /**
+     * Find all records.
+     * @return List with records.
+     */
+    List<T> findAll();
 }

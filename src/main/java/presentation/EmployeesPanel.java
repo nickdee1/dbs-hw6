@@ -185,7 +185,7 @@ public class EmployeesPanel extends JPanel {
                         Object[] formattedData = checkData(data);
                         if (formattedData != null) {
                             EmployeeDAO employeeDAO = new EmployeeDAO();
-                            Employee employee = employeeDAO.find((Integer) formattedData[0]);
+                            Employee employee = employeeDAO.findEmp((Integer) formattedData[0]);
                             if (employee != null) {
                                 JOptionPane.showMessageDialog(panel, "Employee already exists!", "error", JOptionPane.ERROR_MESSAGE);
                                 break;
