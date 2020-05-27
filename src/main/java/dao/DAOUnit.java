@@ -29,7 +29,7 @@ public abstract class DAOUnit<T> implements DAOInterface<T> {
     public T find(Integer id) {
         Objects.requireNonNull(id);
         et.begin();
-        T entity = em.getReference(type, id);
+        T entity = em.find(type, id);
         et.commit();
         return entity;
     }

@@ -2,8 +2,8 @@ package service;
 
 import dao.DetailDAO;
 import model.Detail;
-import service.parsers.BarberParser;
-import service.parsers.ManagerParser;
+import service.parsers.employee_parser.BarberParser;
+import service.parsers.employee_parser.ManagerParser;
 
 import java.util.List;
 
@@ -44,14 +44,36 @@ public class DetailService {
         return output;
     }
 
-    public void persistEmployeeData(Object[] data) {
+    public void persistEmployeeData(String[] data) {
         context = new DetailContext();
 
-        if ((Boolean) data[3])
-            context.setStrategy(new ManagerParser());
-        else
-            context.setStrategy(new BarberParser());
+        Object[] validData = processData(data);
+        Boolean isManager = (Boolean) validData[3];
 
-        context.executeParser(data);
+        if (isManager)
+            context.setParserStrategy(new ManagerParser());
+        else
+            context.setParserStrategy(new BarberParser());
+
+        context.executeDataPersistence(validData);
+    }
+
+    public void updateEmployeeData(String[] data) {
+        context = new DetailContext();
+
+        Object[] validData = processData(data);
+        Boolean isManager = (Boolean) validData[3];
+
+        if (isManager)
+            context.setParserStrategy(new ManagerParser());
+        else
+            context.setParserStrategy(new BarberParser());
+
+        context.executeDataUpdate(validData);
+    }
+
+    private Object[] processData(String[] data) {
+        context.setDataValidationStrategy(new DetailValidator());
+        return context.validateData(data);
     }
 }

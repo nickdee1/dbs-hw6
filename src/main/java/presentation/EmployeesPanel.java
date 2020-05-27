@@ -68,48 +68,6 @@ public class EmployeesPanel extends JPanel {
     }
 
 
-    private Object[] checkData(String[] data) {
-        Object[] output = new Object[6];
-        Integer id;
-        Double salary;
-        String firstName;
-        String secondName;
-        LocalDate date;
-        Boolean isManager;
-
-        try {
-            id = Integer.parseInt(data[0]);
-            salary = Double.parseDouble(data[5]);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-
-        if (data[3].toLowerCase().equals("true") || data[3].toLowerCase().equals("false"))
-            isManager = Boolean.parseBoolean(data[3].toLowerCase());
-        else
-            return null;
-
-        try {
-            date = LocalDate.parse(data[4]);
-        } catch (DateTimeException e) {
-            return null;
-        }
-
-        if (data[1].length() == 0 || data[2].length() == 0) return null;
-
-        firstName = data[1];
-        secondName = data[2];
-
-        output[0] = id;
-        output[1] = firstName;
-        output[2] = secondName;
-        output[3] = isManager;
-        output[4] = date;
-        output[5] = salary;
-
-        return output;
-    }
-
     private class Handler implements ActionListener {
 
         EmployeesPanel panel;
@@ -140,42 +98,33 @@ public class EmployeesPanel extends JPanel {
                     em.remove(id);
                     break;
                 case "Add":
-                    JTextField tx1 = new JTextField();
-                    JTextField tx2 = new JTextField();
-                    JTextField tx3 = new JTextField();
-                    JTextField tx4 = new JTextField();
-                    JTextField tx5 = new JTextField();
-                    JTextField tx6 = new JTextField();
-                    Object[] a = {"Id", tx1, "First Name", tx2, "Second Name", tx3, "Is Manager (true/false)", tx4, "Birth Day (YYYY-MM-DD)", tx5, "Salary", tx6};
+                    JTextField[] textFields = {
+                            new JTextField(),
+                            new JTextField(),
+                            new JTextField(),
+                            new JTextField(),
+                            new JTextField(),
+                            new JTextField()
+                    };
+
+                    Object[] a = {"Id", textFields[0], "First Name", textFields[1], "Second Name", textFields[2], "Is Manager (true/false)", textFields[3], "Birth Day (YYYY-MM-DD)", textFields[4], "Salary", textFields[5]};
                     int opt = JOptionPane.showConfirmDialog(panel, a);
 
                     if (opt == JOptionPane.OK_OPTION) {
-                        String[] data = new String[]{
-                                tx1.getText(),
-                                tx2.getText(),
-                                tx3.getText(),
-                                tx4.getText(),
-                                tx5.getText(),
-                                tx6.getText()};
-                        Object[] formattedData = checkData(data);
-//                        if (formattedData != null) {
-//                            EmployeeDAO employeeDAO = new EmployeeDAO();
-//                            Employee employee = employeeDAO.findEmp((Integer) formattedData[0]);
-//                            if (employee != null) {
-//                                JOptionPane.showMessageDialog(panel, "Employee already exists!", "error", JOptionPane.ERROR_MESSAGE);
-//                                break;
-//                            }
+                        String[] data = new String[] {
+                                textFields[0].getText(),
+                                textFields[1].getText(),
+                                textFields[2].getText(),
+                                textFields[3].getText(),
+                                textFields[4].getText(),
+                                textFields[5].getText()
+                        };
 
-                            DetailService service = new DetailService();
-                            try {
-                                service.persistEmployeeData(formattedData);
-                            } catch (Exception ex) {
-                                JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
-                            }
-                            model.addRow(data);
-//                        } else {
-//                            JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
-//                        }
+                        DetailService service = new DetailService();
+                        service.persistEmployeeData(data);
+
+                        model.addRow(data);
+//                      JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
                 case "Edit":
@@ -196,24 +145,9 @@ public class EmployeesPanel extends JPanel {
                                 isManager.getText(),
                                 birthDay.getText(),
                                 salary.getText()};
-                        Object[] formattedData = checkData(data);
-                        if (formattedData != null) {
-                            Integer idEmp = (Integer) formattedData[0];
-                            Detail det = dao.find(idEmp);
-                            det.setFirst_name((String) formattedData[1]);
-                            det.setSecond_name((String) formattedData[2]);
-                            det.setManager((Boolean) formattedData[3]);
-                            det.setBirthday((LocalDate) formattedData[4]);
-                            det.setSalary((Double) formattedData[5]);
-                            dao.update(det);
 
-                            for (int i = 1; i < 6; i++)
-                                model.setValueAt(data[i], row, i);
-
-
-                        } else {
-                            JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
-                        }
+                        DetailService service = new DetailService();
+                        service.updateEmployeeData(data);
                     }
                     break;
             }
