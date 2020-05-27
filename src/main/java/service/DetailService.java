@@ -1,8 +1,9 @@
 package service;
 
 import dao.DetailDAO;
-import model.Appointment;
 import model.Detail;
+import service.parsers.BarberParser;
+import service.parsers.ManagerParser;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
 public class DetailService {
 
     private final DetailDAO dao;
+
+    private DetailContext context;
 
     public DetailService() {
         this.dao = new DetailDAO();
@@ -41,5 +44,14 @@ public class DetailService {
         return output;
     }
 
+    public void persistEmployeeData(Object[] data) {
+        context = new DetailContext();
 
+        if ((Boolean) data[3])
+            context.setStrategy(new ManagerParser());
+        else
+            context.setStrategy(new BarberParser());
+
+        context.executeParser(data);
+    }
 }

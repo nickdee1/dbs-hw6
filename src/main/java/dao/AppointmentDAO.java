@@ -2,7 +2,6 @@ package dao;
 
 import model.Appointment;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
 
 public class AppointmentDAO extends DAOUnit<Appointment> {

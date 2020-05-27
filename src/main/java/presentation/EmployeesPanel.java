@@ -8,6 +8,8 @@ import model.Barber;
 import model.Detail;
 import model.Employee;
 import model.Manager;
+import service.DetailService;
+import service.parsers.exceptions.EmployeeExistsException;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -65,33 +67,6 @@ public class EmployeesPanel extends JPanel {
         add(buttonPanel);
     }
 
-
-    private void parseEmployeeDetail(Object[] data) {
-        Detail detail = new Detail();
-        Employee employee = new Employee();
-        EmployeeDAO employeeDAO = new EmployeeDAO();
-        employee.setId((Integer) data[0]);
-        detail.setEmployee_id((Integer) data[0]);
-        detail.setFirst_name((String) data[1]);
-        detail.setSecond_name((String) data[2]);
-        detail.setManager((Boolean) data[3]);
-        detail.setBirthday((LocalDate) data[4]);
-        detail.setSalary((Double) data[5]);
-        employeeDAO.persist(employee);
-        if (detail.isManager()) {
-            Manager manager = new Manager();
-            ManagerDAO managerDAO = new ManagerDAO();
-            manager.setManager_id(employee.getId());
-            managerDAO.persist(manager);
-        } else {
-            Barber barber = new Barber();
-            BarberDAO barberDAO = new BarberDAO();
-            barber.setBarber_id(employee.getId());
-            barberDAO.persist(barber);
-        }
-
-        dao.persist(detail);
-    }
 
     private Object[] checkData(String[] data) {
         Object[] output = new Object[6];
@@ -183,19 +158,24 @@ public class EmployeesPanel extends JPanel {
                                 tx5.getText(),
                                 tx6.getText()};
                         Object[] formattedData = checkData(data);
-                        if (formattedData != null) {
-                            EmployeeDAO employeeDAO = new EmployeeDAO();
-                            Employee employee = employeeDAO.findEmp((Integer) formattedData[0]);
-                            if (employee != null) {
-                                JOptionPane.showMessageDialog(panel, "Employee already exists!", "error", JOptionPane.ERROR_MESSAGE);
-                                break;
-                            }
+//                        if (formattedData != null) {
+//                            EmployeeDAO employeeDAO = new EmployeeDAO();
+//                            Employee employee = employeeDAO.findEmp((Integer) formattedData[0]);
+//                            if (employee != null) {
+//                                JOptionPane.showMessageDialog(panel, "Employee already exists!", "error", JOptionPane.ERROR_MESSAGE);
+//                                break;
+//                            }
 
-                            parseEmployeeDetail(formattedData);
+                            DetailService service = new DetailService();
+                            try {
+                                service.persistEmployeeData(formattedData);
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
+                            }
                             model.addRow(data);
-                        } else {
-                            JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
-                        }
+//                        } else {
+//                            JOptionPane.showMessageDialog(panel, "Data is invalid", "Data error", JOptionPane.ERROR_MESSAGE);
+//                        }
                     }
                     break;
                 case "Edit":
