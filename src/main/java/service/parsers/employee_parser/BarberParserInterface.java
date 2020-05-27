@@ -10,7 +10,7 @@ import model.Employee;
 
 import java.time.LocalDate;
 
-public class BarberParser implements EmployeeParserStrategy {
+public class BarberParserInterface implements EmployeeParserInterface {
 
     @Override
     public void persist(Object[] data) {

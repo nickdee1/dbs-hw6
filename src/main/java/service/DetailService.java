@@ -2,8 +2,8 @@ package service;
 
 import dao.DetailDAO;
 import model.Detail;
-import service.parsers.employee_parser.BarberParser;
-import service.parsers.employee_parser.ManagerParser;
+import service.parsers.employee_parser.BarberParserInterface;
+import service.parsers.employee_parser.ManagerParserInterface;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class DetailService {
 
     private final DetailDAO dao;
 
-    private DetailContext context;
+    private DataContext context;
 
     public DetailService() {
         this.dao = new DetailDAO();
@@ -44,32 +44,40 @@ public class DetailService {
         return output;
     }
 
+    /**
+     * Validate and persist employee data to DB.
+     * @param data - unprocessed data to be persisted.
+     */
     public void persistEmployeeData(String[] data) {
-        context = new DetailContext();
+        context = new DataContext();
 
         Object[] validData = processData(data);
         Boolean isManager = (Boolean) validData[3];
 
         if (isManager)
-            context.setParserStrategy(new ManagerParser());
+            context.setParserStrategy(new ManagerParserInterface());
         else
-            context.setParserStrategy(new BarberParser());
+            context.setParserStrategy(new BarberParserInterface());
 
-        context.executeDataPersistence(validData);
+        context.executeEmployeeDataPersistence(validData);
     }
 
+    /**
+     * Validate and update employee data in DB.
+     * @param data - unprocessed data to be edited.
+     */
     public void updateEmployeeData(String[] data) {
-        context = new DetailContext();
+        context = new DataContext();
 
         Object[] validData = processData(data);
         Boolean isManager = (Boolean) validData[3];
 
         if (isManager)
-            context.setParserStrategy(new ManagerParser());
+            context.setParserStrategy(new ManagerParserInterface());
         else
-            context.setParserStrategy(new BarberParser());
+            context.setParserStrategy(new BarberParserInterface());
 
-        context.executeDataUpdate(validData);
+        context.executeEmployeeDataUpdate(validData);
     }
 
     private Object[] processData(String[] data) {

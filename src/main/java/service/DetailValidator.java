@@ -3,7 +3,8 @@ package service;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
-public class DetailValidator implements DataValidationStrategy{
+class DetailValidator implements DataValidationStrategy {
+
     @Override
     public Object[] validateData(String[] data) {
         Object[] output = new Object[6];

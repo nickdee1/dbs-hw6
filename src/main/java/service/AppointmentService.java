@@ -2,6 +2,7 @@ package service;
 
 import dao.AppointmentDAO;
 import model.Appointment;
+import service.parsers.appointment_parser.AppointmentParser;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
 public class AppointmentService {
 
     private final AppointmentDAO dao;
+
+    private DataContext context;
 
     public AppointmentService() {
         dao = new AppointmentDAO();
@@ -43,4 +46,26 @@ public class AppointmentService {
         return output;
     }
 
+    public void persistAppointmentData(String[] data) {
+        context = new DataContext();
+
+        Object[] validData = processData(data);
+        context.setParserStrategy(new AppointmentParser());
+
+        context.executeAppointmentDataPersistence(validData);
+    }
+
+    public void updateAppointmentData(String[] data) {
+        context = new DataContext();
+
+        Object[] validData = processData(data);
+        context.setParserStrategy(new AppointmentParser());
+
+        context.executeAppointmentDataUpdate(validData);
+    }
+
+    private Object[] processData(String[] data) {
+        context.setDataValidationStrategy(new AppointmentValidator());
+        return context.validateData(data);
+    }
 }

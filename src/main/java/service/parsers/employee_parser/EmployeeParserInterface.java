@@ -1,7 +1,7 @@
 package service.parsers.employee_parser;
 
 
-public interface EmployeeParserStrategy {
+public interface EmployeeParserInterface {
 
     void persist(Object[] data);
 

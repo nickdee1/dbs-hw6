@@ -10,7 +10,7 @@ import model.Manager;
 
 import java.time.LocalDate;
 
-public class ManagerParser implements EmployeeParserStrategy {
+public class ManagerParserInterface implements EmployeeParserInterface {
     @Override
     public void persist(Object[] data) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
