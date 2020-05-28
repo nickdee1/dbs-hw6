@@ -7,6 +7,10 @@ class DetailValidator implements DataValidationStrategy {
 
     @Override
     public Object[] validateData(String[] data) {
+
+        if (data.length == 2)
+            return validateForDelete(data);
+
         Object[] output = new Object[6];
         Integer id;
         Double salary;
@@ -46,5 +50,27 @@ class DetailValidator implements DataValidationStrategy {
         output[5] = salary;
 
         return output;
+    }
+
+    private Object[] validateForDelete(String[] data) {
+        Object[] out = new Object[2];
+        Integer id;
+        Boolean isManager;
+
+        try {
+            id = Integer.parseInt((String) data[0]);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+
+        if ( data[1].toLowerCase().equals("true") || data[1].toLowerCase().equals("false"))
+            isManager = Boolean.parseBoolean(data[1].toLowerCase());
+        else
+            return null;
+
+        out[0] = id;
+        out[1] = isManager;
+
+        return out;
     }
 }

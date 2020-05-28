@@ -67,6 +67,17 @@ public class BarberParserInterface implements EmployeeParserInterface {
 
     @Override
     public void delete(Integer id) {
+        EmployeeDAO employeeDAO = new EmployeeDAO();
+        BarberDAO barberDAO = new BarberDAO();
+        DetailDAO detailDAO = new DetailDAO();
+
+        Barber barber = barberDAO.find(id);
+
+        if (barber != null) {
+            detailDAO.remove(id);
+            barberDAO.remove(id);
+            employeeDAO.remove(id);
+        }
 
     }
 }

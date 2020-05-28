@@ -4,6 +4,7 @@ import dao.BarberDAO;
 import dao.DetailDAO;
 import dao.EmployeeDAO;
 import dao.ManagerDAO;
+import model.Barber;
 import model.Detail;
 import model.Employee;
 import model.Manager;
@@ -70,6 +71,16 @@ public class ManagerParserInterface implements EmployeeParserInterface {
 
     @Override
     public void delete(Integer id) {
+        EmployeeDAO employeeDAO = new EmployeeDAO();
+        ManagerDAO managerDAO = new ManagerDAO();
+        DetailDAO detailDAO = new DetailDAO();
 
+        Manager manager = managerDAO.find(id);
+
+        if (manager != null) {
+            detailDAO.remove(id);
+            managerDAO.remove(id);
+            employeeDAO.remove(id);
+        }
     }
 }

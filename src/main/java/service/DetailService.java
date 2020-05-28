@@ -80,6 +80,21 @@ public class DetailService {
         context.executeEmployeeDataUpdate(validData);
     }
 
+    public void deleteEmployeeData(String[] data) {
+        context = new DataContext();
+
+        Object[] validData = processData(data);
+        Integer id = (Integer) validData[0];
+        Boolean isManager = (Boolean) validData[1];
+
+        if (isManager)
+            context.setParserStrategy(new ManagerParserInterface());
+        else
+            context.setParserStrategy(new BarberParserInterface());
+
+        context.executeEmployeeDelete(id);
+    }
+
     private Object[] processData(String[] data) {
         context.setDataValidationStrategy(new DetailValidator());
         return context.validateData(data);

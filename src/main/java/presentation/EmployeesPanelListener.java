@@ -16,12 +16,14 @@ class EmployeesPanelListener implements ActionListener {
     private final JTable dataTable;
     private final DefaultTableModel model;
     private final EmployeesPanel panel;
+    private final DetailService service;
 
     EmployeesPanelListener(DetailDAO dao, JTable dataTable, DefaultTableModel model, EmployeesPanel panel) {
         this.dao = dao;
         this.dataTable = dataTable;
         this.model = model;
         this.panel = panel;
+        this.service = new DetailService();
     }
 
     @Override
@@ -70,8 +72,6 @@ class EmployeesPanelListener implements ActionListener {
                     textFields[4].getText(),
                     textFields[5].getText()
             };
-
-            DetailService service = new DetailService();
             service.persistEmployeeData(data);
 
             model.addRow(data);
@@ -107,27 +107,20 @@ class EmployeesPanelListener implements ActionListener {
                     textFields[3].getText(),
                     textFields[4].getText()};
 
-            DetailService service = new DetailService();
             service.updateEmployeeData(data);
         }
     }
 
     private void deleteActionPerformed() {
         int selectedRow = dataTable.getSelectedRow();
-        Integer id = Integer.parseInt((String) dataTable.getValueAt(selectedRow, 0));
+
+        String[] data = {
+                (String) dataTable.getValueAt(selectedRow, 0),
+                (String) model.getValueAt(selectedRow, 3)
+        };
+
+        service.deleteEmployeeData(data);
         model.removeRow(selectedRow);
-        if (dao.find(id).isManager()) {
-            dao.remove(id);
-            ManagerDAO managerDAO = new ManagerDAO();
-            managerDAO.remove(id);
-        }
-        else {
-            dao.remove(id);
-            BarberDAO d = new BarberDAO();
-            d.remove(id);
-        }
-        EmployeeDAO em = new EmployeeDAO();
-        em.remove(id);
     }
 
 }
