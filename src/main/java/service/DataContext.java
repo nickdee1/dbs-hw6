@@ -29,20 +29,20 @@ public class DataContext {
         return employeeStrategy.update(data);
     }
 
-    protected void executeAppointmentDataPersistence(Object[] data) {
-        appointmentStrategy.persist(data);
+    protected boolean executeAppointmentDataPersistence(Object[] data) {
+        return appointmentStrategy.persist(data);
     }
 
     protected boolean executeEmployeeDelete(Integer id) {
         return employeeStrategy.delete(id);
     }
 
-    protected void executeAppointmentDelete(Long id) {
-        appointmentStrategy.delete(id);
+    protected boolean executeAppointmentDelete(Long id) {
+        return appointmentStrategy.delete(id);
     }
 
-    protected void executeAppointmentDataUpdate(Object[] data) {
-        appointmentStrategy.update(data);
+    protected boolean executeAppointmentDataUpdate(Object[] data) {
+        return appointmentStrategy.update(data);
     }
 
     protected void setDataValidationStrategy(DataValidationStrategy dataValidationStrategy) {

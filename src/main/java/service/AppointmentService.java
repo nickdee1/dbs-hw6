@@ -2,6 +2,8 @@ package service;
 
 import dao.AppointmentDAO;
 import model.Appointment;
+import service.exceptions.AppointmentExistsException;
+import service.exceptions.InvalidInputDataException;
 import service.parsers.appointment_parser.AppointmentParser;
 import service.validators.AppointmentValidator;
 
@@ -47,32 +49,44 @@ public class AppointmentService {
         return output;
     }
 
-    public void persistAppointmentData(String[] data) {
+    public void persistAppointmentData(String[] data) throws AppointmentExistsException, InvalidInputDataException {
         context = new DataContext();
 
         Object[] validData = processData(data);
+        if (validData == null)
+            throw new InvalidInputDataException("Invalid input data!");
+
         context.setParserStrategy(new AppointmentParser());
 
-        context.executeAppointmentDataPersistence(validData);
+        if (!context.executeAppointmentDataPersistence(validData))
+            throw new AppointmentExistsException("Appointment already exists");
     }
 
-    public void updateAppointmentData(String[] data) {
+    public void updateAppointmentData(String[] data) throws AppointmentExistsException, InvalidInputDataException {
         context = new DataContext();
 
         Object[] validData = processData(data);
+        if (validData == null)
+            throw new InvalidInputDataException("Invalid input data!");
+
         context.setParserStrategy(new AppointmentParser());
 
-        context.executeAppointmentDataUpdate(validData);
+        if (!context.executeAppointmentDataUpdate(validData))
+            throw new AppointmentExistsException("Appointment does not exist");
     }
 
-    public void deleteAppointmentData(String[] data) {
+    public void deleteAppointmentData(String[] data) throws AppointmentExistsException, InvalidInputDataException {
         context = new DataContext();
 
         Object[] validData = processData(data);
+        if (validData == null)
+            throw new InvalidInputDataException("Invalid input data!");
+
         Long id = (Long) validData[0];
         context.setParserStrategy(new AppointmentParser());
 
-        context.executeAppointmentDelete(id);
+        if (!context.executeAppointmentDelete(id))
+            throw new AppointmentExistsException("Appointment does not exist");
     }
 
     private Object[] processData(String[] data) {

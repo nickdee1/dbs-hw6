@@ -10,7 +10,7 @@ import java.time.LocalTime;
 public class AppointmentParser implements AppointmentParserInterface {
 
     @Override
-    public void persist(Object[] data) {
+    public boolean persist(Object[] data) {
         AppointmentDAO appointmentDAO = new AppointmentDAO();
         Appointment appointment = appointmentDAO.find((Long) data[0]);
 
@@ -29,29 +29,36 @@ public class AppointmentParser implements AppointmentParserInterface {
             Barber b = barberDAO.find(appointment.getBarber_id());
             b.getAppointments().add(appointment);
             barberDAO.update(b);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void update(Object[] data) {
+    public boolean update(Object[] data) {
         AppointmentDAO appointmentDAO = new AppointmentDAO();
         Appointment appointment = appointmentDAO.find((Long) data[0]);
 
         if (appointment != null) {
             appointment.setDay((LocalDate) data[1]);
             appointment.setTime((LocalTime) data[2]);
+            appointmentDAO.update(appointment);
+            return true;
         }
 
-        appointmentDAO.update(appointment);
+        return false;
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         AppointmentDAO appointmentDAO = new AppointmentDAO();
         Appointment appointment = appointmentDAO.find(id);
 
         if (appointment != null) {
             appointmentDAO.removeAppointment(id);
+            return true;
         }
+
+        return false;
     }
 }

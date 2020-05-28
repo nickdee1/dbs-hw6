@@ -12,14 +12,12 @@ import java.awt.event.ActionListener;
 
 class EmployeesPanelListener implements ActionListener {
 
-    private final DetailDAO dao;
     private final JTable dataTable;
     private final DefaultTableModel model;
     private final EmployeesPanel panel;
     private final DetailService service;
 
     EmployeesPanelListener(DetailDAO dao, JTable dataTable, DefaultTableModel model, EmployeesPanel panel) {
-        this.dao = dao;
         this.dataTable = dataTable;
         this.model = model;
         this.panel = panel;

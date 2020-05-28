@@ -2,9 +2,9 @@ package service.parsers.appointment_parser;
 
 public interface AppointmentParserInterface {
 
-    void persist(Object[] data);
+    boolean persist(Object[] data);
 
-    void update(Object[] data);
+    boolean update(Object[] data);
 
-    void delete(Long id);
+    boolean delete(Long id);
 }

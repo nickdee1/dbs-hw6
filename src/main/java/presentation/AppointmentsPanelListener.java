@@ -10,6 +10,9 @@ import model.Service;
 import service.AppointmentService;
 import service.BarberService;
 import service.ClientService;
+import service.exceptions.AppointmentExistsException;
+import service.exceptions.InvalidInputDataException;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
@@ -66,8 +69,15 @@ public class AppointmentsPanelListener implements ActionListener {
                     service.getPrice().toString()
             };
 
-            appointmentService.persistAppointmentData(rowData);
-
+            try {
+                appointmentService.persistAppointmentData(rowData);
+            } catch (InvalidInputDataException e) {
+                JOptionPane.showMessageDialog(panel, "The input data is invalid! Try again.");
+                return;
+            } catch (AppointmentExistsException e) {
+                JOptionPane.showMessageDialog(panel, "Appointment already exists.");
+                return;
+            }
             model.addRow(rowData);
         }
     }
@@ -88,15 +98,28 @@ public class AppointmentsPanelListener implements ActionListener {
 
             String dateNew = dateEdit.getText();
             String timeNew = timeEdit.getText();
+            String[] data;
 
-            String[] data = {
-                    (String) model.getValueAt(row, 0),
-                    dateNew,
-                    timeNew
-            };
+            try {
+                data = new String[]{
+                        (String) model.getValueAt(row, 0),
+                        dateNew,
+                        timeNew
+                };
+            } catch (ArrayIndexOutOfBoundsException e) {
+                JOptionPane.showMessageDialog(panel, "Unable to edit! Try again.");
+                return;
+            }
 
-            appointmentService.updateAppointmentData(data);
-
+            try {
+                appointmentService.updateAppointmentData(data);
+            } catch (InvalidInputDataException e) {
+                JOptionPane.showMessageDialog(panel, "The input data is invalid! Try again.");
+                return;
+            } catch (AppointmentExistsException e) {
+                JOptionPane.showMessageDialog(panel, "Appointment does not exist.");
+                return;
+            }
             model.setValueAt(dateNew, row, 5);
             model.setValueAt(timeNew, row, 6);
         }
@@ -104,10 +127,27 @@ public class AppointmentsPanelListener implements ActionListener {
 
     private void deleteActionPerformed() {
         int selectedRow = dataTable.getSelectedRow();
-        String[] data = {
-                (String) dataTable.getValueAt(selectedRow, 0)
-        };
-        appointmentService.deleteAppointmentData(data);
+
+        String[] data;
+
+        try {
+            data = new String[]{
+                    (String) dataTable.getValueAt(selectedRow, 0)
+            };
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(panel, "Unable to delete! Try again.");
+            return;
+        }
+
+        try {
+            appointmentService.deleteAppointmentData(data);
+        } catch (InvalidInputDataException e) {
+            JOptionPane.showMessageDialog(panel, "The input data is invalid! Try again.");
+            return;
+        } catch (AppointmentExistsException e) {
+            JOptionPane.showMessageDialog(panel, "Appointment does not exist.");
+            return;
+        }
         model.removeRow(selectedRow);
     }
 
