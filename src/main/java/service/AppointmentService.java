@@ -3,6 +3,7 @@ package service;
 import dao.AppointmentDAO;
 import model.Appointment;
 import service.parsers.appointment_parser.AppointmentParser;
+import service.validators.AppointmentValidator;
 
 import java.util.List;
 

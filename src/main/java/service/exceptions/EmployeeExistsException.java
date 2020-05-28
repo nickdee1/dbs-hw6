@@ -1,4 +1,4 @@
-package service.parsers.exceptions;
+package service.exceptions;
 
 public class EmployeeExistsException extends Exception {
     public EmployeeExistsException(String message) {

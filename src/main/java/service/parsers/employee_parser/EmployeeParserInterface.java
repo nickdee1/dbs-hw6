@@ -3,9 +3,9 @@ package service.parsers.employee_parser;
 
 public interface EmployeeParserInterface {
 
-    void persist(Object[] data);
+    boolean persist(Object[] data);
 
-    void update(Object[] data);
+    boolean update(Object[] data);
 
-    void delete(Integer id);
+    boolean delete(Integer id);
 }

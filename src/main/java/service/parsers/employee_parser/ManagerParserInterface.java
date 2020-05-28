@@ -4,7 +4,6 @@ import dao.BarberDAO;
 import dao.DetailDAO;
 import dao.EmployeeDAO;
 import dao.ManagerDAO;
-import model.Barber;
 import model.Detail;
 import model.Employee;
 import model.Manager;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 
 public class ManagerParserInterface implements EmployeeParserInterface {
     @Override
-    public void persist(Object[] data) {
+    public boolean persist(Object[] data) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
         Employee employee = employeeDAO.findEmp((Integer) data[0]);
 
@@ -36,11 +35,13 @@ public class ManagerParserInterface implements EmployeeParserInterface {
             managerDAO.persist(manager);
 
             detailDAO.persist(detail);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void update(Object[] data) {
+    public boolean update(Object[] data) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
         BarberDAO barberDAO = new BarberDAO();
         ManagerDAO managerDAO = new ManagerDAO();
@@ -64,13 +65,15 @@ public class ManagerParserInterface implements EmployeeParserInterface {
                 barberDAO.remove(detail.getEmployee_id());
                 managerDAO.persist(manager);
             }
-
             detailDAO.update(detail);
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void delete(Integer id) {
+    public boolean delete(Integer id) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
         ManagerDAO managerDAO = new ManagerDAO();
         DetailDAO detailDAO = new DetailDAO();
@@ -81,6 +84,9 @@ public class ManagerParserInterface implements EmployeeParserInterface {
             detailDAO.remove(id);
             managerDAO.remove(id);
             employeeDAO.remove(id);
+            return true;
         }
+
+        return false;
     }
 }

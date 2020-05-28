@@ -1,9 +1,9 @@
-package service;
+package service.validators;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
-class DetailValidator implements DataValidationStrategy {
+public class DetailValidator implements DataValidationStrategy {
 
     @Override
     public Object[] validateData(String[] data) {

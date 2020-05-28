@@ -1,9 +1,9 @@
-package service;
+package service.validators;
 
 /**
  * Interface for data validation and persistence strategy.
  */
-interface DataValidationStrategy {
+public interface DataValidationStrategy {
 
     /**
      * Validates unprocessed data.

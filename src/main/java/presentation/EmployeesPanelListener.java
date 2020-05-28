@@ -1,10 +1,10 @@
 package presentation;
 
-import dao.BarberDAO;
 import dao.DetailDAO;
-import dao.EmployeeDAO;
-import dao.ManagerDAO;
 import service.DetailService;
+import service.exceptions.EmployeeExistsException;
+import service.exceptions.InvalidInputDataException;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
@@ -72,7 +72,16 @@ class EmployeesPanelListener implements ActionListener {
                     textFields[4].getText(),
                     textFields[5].getText()
             };
-            service.persistEmployeeData(data);
+
+            try {
+                service.persistEmployeeData(data);
+            } catch (InvalidInputDataException e) {
+                JOptionPane.showMessageDialog(panel, "The input data is invalid! Try again.");
+                return;
+            } catch (EmployeeExistsException e) {
+                JOptionPane.showMessageDialog(panel, "Employee already exists.");
+                return;
+            }
 
             model.addRow(data);
         }
@@ -80,13 +89,21 @@ class EmployeesPanelListener implements ActionListener {
 
     private void editActionPerformed() {
         int row = dataTable.getSelectedRow();
-        JTextField[] textFields = {
-                new JTextField((String) model.getValueAt(row, 1)),
-                new JTextField((String) model.getValueAt(row, 2)),
-                new JTextField((String) model.getValueAt(row, 3)),
-                new JTextField((String) model.getValueAt(row, 4)),
-                new JTextField((String) model.getValueAt(row, 5))
-        };
+        JTextField[] textFields;
+
+        try {
+            textFields = new JTextField[] {
+                    new JTextField((String) model.getValueAt(row, 1)),
+                    new JTextField((String) model.getValueAt(row, 2)),
+                    new JTextField((String) model.getValueAt(row, 3)),
+                    new JTextField((String) model.getValueAt(row, 4)),
+                    new JTextField((String) model.getValueAt(row, 5))
+            };
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(panel, "Unable to edit. Try again.");
+            return;
+        }
+
 
         Object[] dialogFields = {
                 "First Name", textFields[0],
@@ -107,19 +124,45 @@ class EmployeesPanelListener implements ActionListener {
                     textFields[3].getText(),
                     textFields[4].getText()};
 
-            service.updateEmployeeData(data);
+            try {
+                service.updateEmployeeData(data);
+            } catch (InvalidInputDataException e) {
+                JOptionPane.showMessageDialog(panel, "The input data is invalid! Try again.");
+                return;
+            } catch (EmployeeExistsException e) {
+                JOptionPane.showMessageDialog(panel, "Employee does not exist.");
+                return;
+            }
+
+            for (int i = 1; i < 6; i++)
+                model.setValueAt(data[i], row, i);
         }
     }
 
     private void deleteActionPerformed() {
         int selectedRow = dataTable.getSelectedRow();
+        String[] data;
 
-        String[] data = {
-                (String) dataTable.getValueAt(selectedRow, 0),
-                (String) model.getValueAt(selectedRow, 3)
-        };
+        try {
+            data = new String[] {
+                    (String) dataTable.getValueAt(selectedRow, 0),
+                    (String) model.getValueAt(selectedRow, 3)
+            };
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(panel, "Unable to delete. Try again");
+            return;
+        }
 
-        service.deleteEmployeeData(data);
+        try {
+            service.deleteEmployeeData(data);
+        } catch (InvalidInputDataException e) {
+            JOptionPane.showMessageDialog(panel, "Unable to delete. Try again");
+            return;
+        } catch (EmployeeExistsException e) {
+            JOptionPane.showMessageDialog(panel, "Employee does not exist.");
+            return;
+        }
+
         model.removeRow(selectedRow);
     }
 

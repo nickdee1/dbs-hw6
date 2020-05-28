@@ -1,7 +1,9 @@
 package service;
 
+import service.exceptions.EmployeeExistsException;
 import service.parsers.appointment_parser.AppointmentParserInterface;
 import service.parsers.employee_parser.EmployeeParserInterface;
+import service.validators.DataValidationStrategy;
 
 public class DataContext {
 
@@ -19,20 +21,20 @@ public class DataContext {
         appointmentStrategy = strategy;
     }
 
-    protected void executeEmployeeDataPersistence(Object[] data) {
-        employeeStrategy.persist(data);
+    protected boolean executeEmployeeDataPersistence(Object[] data){
+        return employeeStrategy.persist(data);
     }
 
-    protected void executeEmployeeDataUpdate(Object[] data) {
-        employeeStrategy.update(data);
+    protected boolean executeEmployeeDataUpdate(Object[] data) {
+        return employeeStrategy.update(data);
     }
 
     protected void executeAppointmentDataPersistence(Object[] data) {
         appointmentStrategy.persist(data);
     }
 
-    protected void executeEmployeeDelete(Integer id) {
-        employeeStrategy.delete(id);
+    protected boolean executeEmployeeDelete(Integer id) {
+        return employeeStrategy.delete(id);
     }
 
     protected void executeAppointmentDelete(Long id) {

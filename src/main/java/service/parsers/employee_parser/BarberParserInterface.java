@@ -13,30 +13,38 @@ import java.time.LocalDate;
 public class BarberParserInterface implements EmployeeParserInterface {
 
     @Override
-    public void persist(Object[] data) {
-        Detail detail = new Detail();
-        Employee employee = new Employee();
+    public boolean persist(Object[] data) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
-        DetailDAO detailDAO = new DetailDAO();
-        employee.setId((Integer) data[0]);
-        detail.setEmployee_id((Integer) data[0]);
-        detail.setFirst_name((String) data[1]);
-        detail.setSecond_name((String) data[2]);
-        detail.setManager((Boolean) data[3]);
-        detail.setBirthday((LocalDate) data[4]);
-        detail.setSalary((Double) data[5]);
-        employeeDAO.persist(employee);
+        Employee employee = employeeDAO.findEmp((Integer) data[0]);
 
-        Barber barber = new Barber();
-        BarberDAO barberDAO = new BarberDAO();
-        barber.setBarber_id(employee.getId());
-        barberDAO.persist(barber);
+        if (employee == null) {
 
-        detailDAO.persist(detail);
+            Detail detail = new Detail();
+            employee = new Employee();
+            DetailDAO detailDAO = new DetailDAO();
+            employee.setId((Integer) data[0]);
+            detail.setEmployee_id((Integer) data[0]);
+            detail.setFirst_name((String) data[1]);
+            detail.setSecond_name((String) data[2]);
+            detail.setManager((Boolean) data[3]);
+            detail.setBirthday((LocalDate) data[4]);
+            detail.setSalary((Double) data[5]);
+            employeeDAO.persist(employee);
+
+            Barber barber = new Barber();
+            BarberDAO barberDAO = new BarberDAO();
+            barber.setBarber_id(employee.getId());
+            barberDAO.persist(barber);
+
+            detailDAO.persist(detail);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    public void update(Object[] data) {
+    public boolean update(Object[] data) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
         BarberDAO barberDAO = new BarberDAO();
         ManagerDAO managerDAO = new ManagerDAO();
@@ -62,11 +70,14 @@ public class BarberParserInterface implements EmployeeParserInterface {
             }
 
             detailDAO.update(detail);
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void delete(Integer id) {
+    public boolean delete(Integer id) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
         BarberDAO barberDAO = new BarberDAO();
         DetailDAO detailDAO = new DetailDAO();
@@ -77,7 +88,9 @@ public class BarberParserInterface implements EmployeeParserInterface {
             detailDAO.remove(id);
             barberDAO.remove(id);
             employeeDAO.remove(id);
+            return true;
         }
 
+        return false;
     }
 }
