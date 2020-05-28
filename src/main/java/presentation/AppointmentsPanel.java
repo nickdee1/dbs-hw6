@@ -22,6 +22,7 @@ public class AppointmentsPanel extends JPanel {
 
         scrollPane.setSize(780, 400);
 
+        dataTable.getTableHeader().setReorderingAllowed(false);
         AppointmentsPanelListener h = new AppointmentsPanelListener(dataTable, model, this);
 
         JPanel buttonPanel = new JPanel();

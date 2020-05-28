@@ -4,7 +4,6 @@ import dao.AppointmentDAO;
 import dao.BarberDAO;
 import model.Appointment;
 import model.Barber;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -44,5 +43,15 @@ public class AppointmentParser implements AppointmentParserInterface {
         }
 
         appointmentDAO.update(appointment);
+    }
+
+    @Override
+    public void delete(Long id) {
+        AppointmentDAO appointmentDAO = new AppointmentDAO();
+        Appointment appointment = appointmentDAO.find(id);
+
+        if (appointment != null) {
+            appointmentDAO.removeAppointment(id);
+        }
     }
 }

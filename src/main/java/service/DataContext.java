@@ -31,6 +31,14 @@ public class DataContext {
         appointmentStrategy.persist(data);
     }
 
+    protected void executeEmployeeDelete(Integer id) {
+        employeeStrategy.delete(id);
+    }
+
+    protected void executeAppointmentDelete(Long id) {
+        appointmentStrategy.delete(id);
+    }
+
     protected void executeAppointmentDataUpdate(Object[] data) {
         appointmentStrategy.update(data);
     }

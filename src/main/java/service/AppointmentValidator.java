@@ -10,7 +10,10 @@ public class AppointmentValidator implements DataValidationStrategy {
 
     @Override
     public Object[] validateData(String[] data) {
-        if (data.length == 3)
+
+        if (data.length == 1)
+            return validateForDelete(data);
+        else if (data.length == 3)
             return validateForUpdate(data);
 
         Object[] out = new Object[data.length];
@@ -75,6 +78,19 @@ public class AppointmentValidator implements DataValidationStrategy {
         out[1] = newDate;
         out[2] = newTime;
 
+        return out;
+    }
+
+    private Object[] validateForDelete(String[] data) {
+        Object[] out = new Object[1];
+        Long id;
+        try {
+            id = Long.parseLong(data[0]);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+
+        out[0] = id;
         return out;
     }
 }

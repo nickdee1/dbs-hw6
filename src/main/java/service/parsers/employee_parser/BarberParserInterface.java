@@ -64,4 +64,9 @@ public class BarberParserInterface implements EmployeeParserInterface {
             detailDAO.update(detail);
         }
     }
+
+    @Override
+    public void delete(Integer id) {
+
+    }
 }

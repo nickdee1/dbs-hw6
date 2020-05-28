@@ -6,4 +6,5 @@ public interface AppointmentParserInterface {
 
     void update(Object[] data);
 
+    void delete(Long id);
 }

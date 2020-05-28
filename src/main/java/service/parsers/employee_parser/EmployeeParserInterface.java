@@ -6,4 +6,6 @@ public interface EmployeeParserInterface {
     void persist(Object[] data);
 
     void update(Object[] data);
+
+    void delete(Integer id);
 }

@@ -64,6 +64,16 @@ public class AppointmentService {
         context.executeAppointmentDataUpdate(validData);
     }
 
+    public void deleteAppointmentData(String[] data) {
+        context = new DataContext();
+
+        Object[] validData = processData(data);
+        Long id = (Long) validData[0];
+        context.setParserStrategy(new AppointmentParser());
+
+        context.executeAppointmentDelete(id);
+    }
+
     private Object[] processData(String[] data) {
         context.setDataValidationStrategy(new AppointmentValidator());
         return context.validateData(data);

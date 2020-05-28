@@ -38,6 +38,7 @@ public class EmployeesPanel extends JPanel {
         model = new DefaultTableModel(data, COLUMNS);
 
         dataTable = new JTable(model);
+        dataTable.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPane = new JScrollPane(dataTable);
 
         scrollPane.setSize(780, 400);

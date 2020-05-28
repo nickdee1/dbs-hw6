@@ -22,7 +22,8 @@ public class AppointmentsPanelListener implements ActionListener {
     private final AppointmentsPanel panel;
     private final ClientService clientService;
     private final BarberService barberService;
-
+    private final AppointmentService appointmentService;
+    private static final String[] COLUMNS = {"Id", "Services", "Client Email", "Client Name", "Barber Id", "Day", "Time", "Price"};
 
     public AppointmentsPanelListener(JTable dataTable, DefaultTableModel model, AppointmentsPanel panel) {
         this.dataTable = dataTable;
@@ -30,6 +31,7 @@ public class AppointmentsPanelListener implements ActionListener {
         this.panel = panel;
         this.clientService = new ClientService();
         this.barberService = new BarberService();
+        this.appointmentService = new AppointmentService();
     }
 
     private void addActionPerformed() {
@@ -64,7 +66,6 @@ public class AppointmentsPanelListener implements ActionListener {
                     service.getPrice().toString()
             };
 
-            AppointmentService appointmentService = new AppointmentService();
             appointmentService.persistAppointmentData(rowData);
 
             model.addRow(rowData);
@@ -93,7 +94,7 @@ public class AppointmentsPanelListener implements ActionListener {
                     dateNew,
                     timeNew
             };
-            AppointmentService appointmentService = new AppointmentService();
+
             appointmentService.updateAppointmentData(data);
 
             model.setValueAt(dateNew, row, 5);
@@ -102,15 +103,17 @@ public class AppointmentsPanelListener implements ActionListener {
     }
 
     private void deleteActionPerformed() {
-        AppointmentDAO dao = new AppointmentDAO();
         int selectedRow = dataTable.getSelectedRow();
-        Long id = Long.parseLong((String) dataTable.getValueAt(selectedRow, 0));
+        String[] data = {
+                (String) dataTable.getValueAt(selectedRow, 0)
+        };
+        appointmentService.deleteAppointmentData(data);
         model.removeRow(selectedRow);
-        dao.removeAppointment(id);
     }
 
     private void refreshActionPerformed() {
-
+        String[][] data = appointmentService.getAppointments();
+        model.setDataVector(data, COLUMNS);
     }
 
     @Override
@@ -129,9 +132,6 @@ public class AppointmentsPanelListener implements ActionListener {
                 break;
             case "Refresh App":
                 refreshActionPerformed();
-//                AppointmentService service = new AppointmentService();
-//                data = service.getAppointments();
-//                model.setDataVector(data, COLUMNS);
                 break;
         }
     }
