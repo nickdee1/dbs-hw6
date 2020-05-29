@@ -1,10 +1,12 @@
 package service.parsers.appointment_parser;
 
+import model.Appointment;
+
 public interface AppointmentParserInterface {
 
-    boolean persist(Object[] data);
+    boolean persist(Appointment data);
 
-    boolean update(Object[] data);
+    boolean update(Appointment data);
 
     boolean delete(Long id);
 }

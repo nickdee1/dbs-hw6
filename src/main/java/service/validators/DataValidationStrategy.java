@@ -10,6 +10,6 @@ public interface DataValidationStrategy {
      * @param data - the data to be processed.
      * @return Object[] array with valid data if no error occurs, null otherwise.
      */
-    Object[] validateData(String[] data);
+    Object validateData(String[] data);
 
 }

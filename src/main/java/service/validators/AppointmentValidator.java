@@ -1,5 +1,7 @@
 package service.validators;
 
+import model.Appointment;
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,14 +10,13 @@ import java.time.format.DateTimeFormatter;
 public class AppointmentValidator implements DataValidationStrategy {
 
     @Override
-    public Object[] validateData(String[] data) {
+    public Object validateData(String[] data) {
 
         if (data.length == 1)
             return validateForDelete(data);
         else if (data.length == 3)
             return validateForUpdate(data);
 
-        Object[] out = new Object[data.length];
         LocalDate date;
         LocalTime time;
         Long id;
@@ -39,20 +40,21 @@ public class AppointmentValidator implements DataValidationStrategy {
             return null;
         }
 
-        out[0] = id;
-        out[1] = data[1];
-        out[2] = data[2];
-        out[3] = data[3];
-        out[4] = Integer.parseInt(data[4]);
-        out[5] = date;
-        out[6] = time;
-        out[7] = Double.parseDouble(data[7]);
+        Appointment appointment = new Appointment();
+        appointment.setId(id);
+        appointment.setService_type(data[1]);
+        appointment.setClient_email(data[2]);
+        appointment.setClient_name(data[3]);
+        appointment.setBarber_id(Integer.parseInt(data[4]));
+        appointment.setDay(date);
+        appointment.setTime(time);
+        appointment.setPrice(Double.parseDouble(data[7]));
 
-        return out;
+
+        return appointment;
     }
 
-    private Object[] validateForUpdate(String[] data) {
-        Object[] out = new Object[data.length];
+    private Object validateForUpdate(String[] data) {
         String id = data[0];
         String dateNew = data[1];
         String timeNew = data[2];
@@ -73,15 +75,15 @@ public class AppointmentValidator implements DataValidationStrategy {
             return null;
         }
 
-        out[0] = idAppointment;
-        out[1] = newDate;
-        out[2] = newTime;
+        Appointment appointment = new Appointment();
+        appointment.setId(idAppointment);
+        appointment.setDay(newDate);
+        appointment.setTime(newTime);
 
-        return out;
+        return appointment;
     }
 
-    private Object[] validateForDelete(String[] data) {
-        Object[] out = new Object[1];
+    private Object validateForDelete(String[] data) {
         Long id;
         try {
             id = Long.parseLong(data[0]);
@@ -89,7 +91,8 @@ public class AppointmentValidator implements DataValidationStrategy {
             return null;
         }
 
-        out[0] = id;
-        return out;
+        Appointment appointment = new Appointment();
+        appointment.setId(id);
+        return appointment;
     }
 }

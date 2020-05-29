@@ -54,12 +54,12 @@ public class DetailService {
     public void persistEmployeeData(String[] data) throws InvalidInputDataException, EmployeeExistsException {
         context = new DataContext();
 
-        Object[] validData = processData(data);
+        Detail validData = (Detail) processData(data);
 
         if (validData == null)
             throw new InvalidInputDataException("The input data is invalid");
 
-        Boolean isManager = (Boolean) validData[3];
+        Boolean isManager = validData.isManager();
 
         if (isManager)
             context.setParserStrategy(new ManagerParserInterface());
@@ -77,12 +77,12 @@ public class DetailService {
     public void updateEmployeeData(String[] data) throws InvalidInputDataException, EmployeeExistsException {
         context = new DataContext();
 
-        Object[] validData = processData(data);
+        Detail validData = (Detail) processData(data);
 
         if (validData == null)
             throw new InvalidInputDataException("The input data is invalid");
 
-        Boolean isManager = (Boolean) validData[3];
+        Boolean isManager = validData.isManager();
 
         if (isManager)
             context.setParserStrategy(new ManagerParserInterface());
@@ -96,13 +96,13 @@ public class DetailService {
     public void deleteEmployeeData(String[] data) throws InvalidInputDataException, EmployeeExistsException {
         context = new DataContext();
 
-        Object[] validData = processData(data);
+        Detail validData = (Detail) processData(data);
 
         if (validData == null)
             throw new InvalidInputDataException("The input data is invalid");
 
-        Integer id = (Integer) validData[0];
-        Boolean isManager = (Boolean) validData[1];
+        Integer id =  validData.getEmployee_id();
+        Boolean isManager = validData.isManager();
 
         if (isManager)
             context.setParserStrategy(new ManagerParserInterface());
@@ -113,7 +113,7 @@ public class DetailService {
             throw new EmployeeExistsException("Employee does not exist!");
     }
 
-    private Object[] processData(String[] data) {
+    private Object processData(String[] data) {
         context.setDataValidationStrategy(new DetailValidator());
         return context.validateData(data);
     }

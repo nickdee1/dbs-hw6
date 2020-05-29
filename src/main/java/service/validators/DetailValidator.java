@@ -1,17 +1,18 @@
 package service.validators;
 
+import model.Detail;
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
 public class DetailValidator implements DataValidationStrategy {
 
     @Override
-    public Object[] validateData(String[] data) {
+    public Object validateData(String[] data) {
 
         if (data.length == 2)
             return validateForDelete(data);
 
-        Object[] output = new Object[6];
         Integer id;
         Double salary;
         String firstName;
@@ -42,18 +43,18 @@ public class DetailValidator implements DataValidationStrategy {
         firstName = data[1];
         secondName = data[2];
 
-        output[0] = id;
-        output[1] = firstName;
-        output[2] = secondName;
-        output[3] = isManager;
-        output[4] = date;
-        output[5] = salary;
+        Detail detail = new Detail();
+        detail.setEmployee_id(id);
+        detail.setFirst_name(firstName);
+        detail.setSecond_name(secondName);
+        detail.setBirthday(date);
+        detail.setSalary(salary);
+        detail.setManager(isManager);
 
-        return output;
+        return detail;
     }
 
-    private Object[] validateForDelete(String[] data) {
-        Object[] out = new Object[2];
+    private Object validateForDelete(String[] data) {
         Integer id;
         Boolean isManager;
 
@@ -68,9 +69,11 @@ public class DetailValidator implements DataValidationStrategy {
         else
             return null;
 
-        out[0] = id;
-        out[1] = isManager;
 
-        return out;
+        Detail detail = new Detail();
+        detail.setEmployee_id(id);
+        detail.setManager(isManager);
+
+        return detail;
     }
 }

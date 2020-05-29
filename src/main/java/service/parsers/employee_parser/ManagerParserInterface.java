@@ -8,25 +8,18 @@ import model.Detail;
 import model.Employee;
 import model.Manager;
 
-import java.time.LocalDate;
 
 public class ManagerParserInterface implements EmployeeParserInterface {
     @Override
-    public boolean persist(Object[] data) {
+    public boolean persist(Detail data) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
-        Employee employee = employeeDAO.findEmp((Integer) data[0]);
+        Employee employee = employeeDAO.findEmp(data.getEmployee_id());
 
         if (employee == null) {
-            Detail detail = new Detail();
+
             employee = new Employee();
             DetailDAO detailDAO = new DetailDAO();
-            employee.setId((Integer) data[0]);
-            detail.setEmployee_id((Integer) data[0]);
-            detail.setFirst_name((String) data[1]);
-            detail.setSecond_name((String) data[2]);
-            detail.setManager((Boolean) data[3]);
-            detail.setBirthday((LocalDate) data[4]);
-            detail.setSalary((Double) data[5]);
+            employee.setId(data.getEmployee_id());
             employeeDAO.persist(employee);
 
             Manager manager = new Manager();
@@ -34,38 +27,32 @@ public class ManagerParserInterface implements EmployeeParserInterface {
             manager.setManager_id(employee.getId());
             managerDAO.persist(manager);
 
-            detailDAO.persist(detail);
+            detailDAO.persist(data);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean update(Object[] data) {
+    public boolean update(Detail data) {
         EmployeeDAO employeeDAO = new EmployeeDAO();
         BarberDAO barberDAO = new BarberDAO();
         ManagerDAO managerDAO = new ManagerDAO();
-        Employee employee = employeeDAO.findEmp((Integer) data[0]);
+        Employee employee = employeeDAO.findEmp(data.getEmployee_id());
 
         if (employee != null) {
-            Detail detail = new Detail();
             DetailDAO detailDAO = new DetailDAO();
-            detail.setEmployee_id((Integer) data[0]);
-            detail.setFirst_name((String) data[1]);
-            detail.setSecond_name((String) data[2]);
-            detail.setManager((Boolean) data[3]);
-            detail.setBirthday((LocalDate) data[4]);
-            detail.setSalary((Double) data[5]);
 
-            Manager manager = managerDAO.find(detail.getEmployee_id());
+            Manager manager = managerDAO.find(data.getEmployee_id());
 
             if (manager == null) {
                 manager = new Manager();
-                manager.setManager_id(detail.getEmployee_id());
-                barberDAO.remove(detail.getEmployee_id());
+                manager.setManager_id(data.getEmployee_id());
+                barberDAO.remove(data.getEmployee_id());
                 managerDAO.persist(manager);
             }
-            detailDAO.update(detail);
+
+            detailDAO.update(data);
             return true;
         }
 

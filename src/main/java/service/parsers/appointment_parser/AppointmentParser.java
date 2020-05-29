@@ -10,24 +10,15 @@ import java.time.LocalTime;
 public class AppointmentParser implements AppointmentParserInterface {
 
     @Override
-    public boolean persist(Object[] data) {
+    public boolean persist(Appointment data) {
         AppointmentDAO appointmentDAO = new AppointmentDAO();
-        Appointment appointment = appointmentDAO.find((Long) data[0]);
+        Appointment appointment = appointmentDAO.find(data.getId());
 
         if (appointment == null) {
-            appointment = new Appointment();
-            appointment.setId((Long) data[0]);
-            appointment.setService_type((String) data[1]);
-            appointment.setPrice((Double) data[7]);
-            appointment.setClient_email((String) data[2]);
-            appointment.setClient_name((String) data[3]);
-            appointment.setDay((LocalDate) data[5]);
-            appointment.setTime((LocalTime) data[6]);
-            appointment.setBarber_id((Integer) data[4]);
 
             BarberDAO barberDAO = new BarberDAO();
-            Barber b = barberDAO.find(appointment.getBarber_id());
-            b.getAppointments().add(appointment);
+            Barber b = barberDAO.find(data.getBarber_id());
+            b.getAppointments().add(data);
             barberDAO.update(b);
             return true;
         }
@@ -35,13 +26,13 @@ public class AppointmentParser implements AppointmentParserInterface {
     }
 
     @Override
-    public boolean update(Object[] data) {
+    public boolean update(Appointment data) {
         AppointmentDAO appointmentDAO = new AppointmentDAO();
-        Appointment appointment = appointmentDAO.find((Long) data[0]);
+        Appointment appointment = appointmentDAO.find(data.getId());
 
         if (appointment != null) {
-            appointment.setDay((LocalDate) data[1]);
-            appointment.setTime((LocalTime) data[2]);
+            appointment.setDay(data.getDay());
+            appointment.setTime(data.getTime());
             appointmentDAO.update(appointment);
             return true;
         }

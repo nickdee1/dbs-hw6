@@ -1,5 +1,7 @@
 package service;
 
+import model.Appointment;
+import model.Detail;
 import service.exceptions.EmployeeExistsException;
 import service.parsers.appointment_parser.AppointmentParserInterface;
 import service.parsers.employee_parser.EmployeeParserInterface;
@@ -21,15 +23,15 @@ public class DataContext {
         appointmentStrategy = strategy;
     }
 
-    protected boolean executeEmployeeDataPersistence(Object[] data){
+    protected boolean executeEmployeeDataPersistence(Detail data){
         return employeeStrategy.persist(data);
     }
 
-    protected boolean executeEmployeeDataUpdate(Object[] data) {
+    protected boolean executeEmployeeDataUpdate(Detail data) {
         return employeeStrategy.update(data);
     }
 
-    protected boolean executeAppointmentDataPersistence(Object[] data) {
+    protected boolean executeAppointmentDataPersistence(Appointment data) {
         return appointmentStrategy.persist(data);
     }
 
@@ -41,7 +43,7 @@ public class DataContext {
         return appointmentStrategy.delete(id);
     }
 
-    protected boolean executeAppointmentDataUpdate(Object[] data) {
+    protected boolean executeAppointmentDataUpdate(Appointment data) {
         return appointmentStrategy.update(data);
     }
 
@@ -49,7 +51,7 @@ public class DataContext {
         this.dataValidationStrategy = dataValidationStrategy;
     }
 
-    protected Object[] validateData(String[] data) {
+    protected Object validateData(String[] data) {
         return dataValidationStrategy.validateData(data);
     }
 }

@@ -52,7 +52,7 @@ public class AppointmentService {
     public void persistAppointmentData(String[] data) throws AppointmentExistsException, InvalidInputDataException {
         context = new DataContext();
 
-        Object[] validData = processData(data);
+        Appointment validData = (Appointment) processData(data);
         if (validData == null)
             throw new InvalidInputDataException("Invalid input data!");
 
@@ -65,7 +65,7 @@ public class AppointmentService {
     public void updateAppointmentData(String[] data) throws AppointmentExistsException, InvalidInputDataException {
         context = new DataContext();
 
-        Object[] validData = processData(data);
+        Appointment validData = (Appointment) processData(data);
         if (validData == null)
             throw new InvalidInputDataException("Invalid input data!");
 
@@ -78,18 +78,18 @@ public class AppointmentService {
     public void deleteAppointmentData(String[] data) throws AppointmentExistsException, InvalidInputDataException {
         context = new DataContext();
 
-        Object[] validData = processData(data);
+        Appointment validData = (Appointment) processData(data);
         if (validData == null)
             throw new InvalidInputDataException("Invalid input data!");
 
-        Long id = (Long) validData[0];
+        Long id = validData.getId();
         context.setParserStrategy(new AppointmentParser());
 
         if (!context.executeAppointmentDelete(id))
             throw new AppointmentExistsException("Appointment does not exist");
     }
 
-    private Object[] processData(String[] data) {
+    private Object processData(String[] data) {
         context.setDataValidationStrategy(new AppointmentValidator());
         return context.validateData(data);
     }
